@@ -1,6 +1,47 @@
 .jumbotron .h1, .jumbotron h1{
 	text-align: center;
-	font-color: red;
+}
 
+div#containerforinput{
+	padding: 20px 20px;
+	margin: 10px 10px;
+}
+
+
+.input-group {
+	width: 100%;
+}
+
+input[type="submit"]{
+	margin-top: 30px;
+
+}
+
+label {
+	margin-top: 20px;
+}
+
+
+
+
+div#displayContainer.panel-body{
+
+	margin-left: 50px;
+
+}
+
+
+td{
+	border-bottom: 1px solid #ddd;
+	padding: 10px 10px;
+	width: 200px;
+
+}
+
+.head{
+	color: darkgrey;
+	 text-transform: uppercase;
+	  font-weight: 600;
+	  padding: 10px 9px;
 }
 
