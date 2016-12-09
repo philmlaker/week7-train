@@ -46,30 +46,47 @@ $("#displayContainer").append('<td class="head">Minutes Away</td>');
 
 
 firebase.database().ref().on("child_added", function(snapshot){
+	
+var a = moment.duration("00:00:" + snapshot.val().frequency);
+console.log(a); 
+
+var b =moment(snapshot.val().time,"H:mm a").add(snapshot.val().frequency, 'minutes');
+console.log(b)
+var nextArrival = b.format("h:mm a");
+
+
+var c = moment().subtract(nextArrival, "HH:mm");
+console.log(c);
+
+var minutesAway = b.diff(moment(), "minutes")
+
 
 	$("#displayContainer").append('<tr>');
 	$("#displayContainer").append(('<td>' + snapshot.val().train + "</td>"));
 	$("#displayContainer").append(('<td>' + snapshot.val().destination + "</td>"));
-	$("#displayContainer").append(('<td>' + snapshot.val().time + "</td>"));
+	$("#displayContainer").append(('<td>' + nextArrival + "</td>"));
 	$("#displayContainer").append(('<td>' + snapshot.val().frequency + "</td>"));
-	$("#displayContainer").append(('<td>' + snapshot.val().minutesAway + "</td>"));
+	$("#displayContainer").append(('<td>' + minutesAway + "</td>"));
 	$("#displayContainer").append("</tr");
-
-
-
 
 
 });
 
+// Curent Time Display
+var datetime = null,
+        date = null;
+
+var update = function () {
+    date = moment(new Date())
+    datetime.html(date.format('dddd, MMMM Do YYYY, h:mm:ss a'));
+};
+
+$(document).ready(function(){
+    datetime = $('#displayCurrentTime')
+    update();
+    setInterval(update, 1000);
+});
 
 
-//Display on page
-
-// firebase.database().ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
-// 	$("#trainNameDisplay").html(snapshot.val().train);
-// 	$("#destinationDisplay").html(snapshot.val().destination);
-// 	$("#firstTrainTimeDisplay").html(snapshot.val().time);
-// 	$("#frequencyDisplay").html(snapshot.val().frequency);
-// })
-
-
+// 
+ 
