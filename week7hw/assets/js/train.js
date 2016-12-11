@@ -76,7 +76,7 @@ firebase.database().ref().on("child_added", function(snapshot){
 
       //minutes time till next
 
-      var nextArrival = moment().add(minTillNext, 'minutes').format("HH:mm");
+      var nextArrival = moment().add(minTillNext, 'minutes').format("hh:mm");
       // var nextArrival = currentTime;
       console.log("testing time " + nextArrival);
       console.log(nextArrival);
