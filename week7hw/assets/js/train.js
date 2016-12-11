@@ -13,11 +13,10 @@ var database = firebase.database();
 
 // Variables for Firebase
 
-var train = "";
-var destination = "";
-var time = "";
-var frequency = "";
-var minutesAway = "";
+var train;
+var destination;
+var time;
+var frequency;
 // var postID = "";
 
 // Grabbing input values on click and push to Firebase
@@ -28,7 +27,6 @@ var minutesAway = "";
 
 
 $("#submit").on("click",function(e){
-	e.preventDefault();
 	train = $("#trainNameInput").val().trim();
 	destination = $("#destinationInput").val().trim();
 	time = $("#firstTrainTimeInput").val().trim();
@@ -36,7 +34,7 @@ $("#submit").on("click",function(e){
 
 
 
-	var newPostRef = firebase.database().ref().push({
+	firebase.database().ref().push({
 		train:train,
 		destination:destination,
 		time:time,
@@ -45,6 +43,7 @@ $("#submit").on("click",function(e){
 		
 
 	});
+		return false;
 	// postID = newPostRef.key;
 	// console.log(postID);
 
@@ -60,23 +59,30 @@ $("#displayContainer").append('<td class="head">Minutes Away</td>');
 
 
 
+
 firebase.database().ref().on("child_added", function(snapshot){
+  		var time = snapshot.val().time;
+      var convertedTime = moment(time, "HH:mm");
+      convertedTime.format("HHmm");
+      console.log("user entered: " + convertedTime.format("HHmm"));
+      //Difference from start time until now in minutes
+      var currentTime = moment().format("HH:mm");
+      console.log("Current time = " + currentTime);
+      var timeFromStart = moment().diff(convertedTime, "minutes");
+      var minTillNext = timeFromStart % snapshot.val().frequency;
+      console.log(minTillNext.toString());
+      console.log("Minutes until Next Train: " + minTillNext);
+      // console.log("Calc test: " + (currentTime) + minTillNext);
 
+      //minutes time till next
 
-	frequency;
-	time;
-	var firstTimeConverted = moment(time, "hh:mm");
-	var currentTime = moment(moment());
-	console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
-	var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-	console.log("DIFFERENCE IN TIME: " + diffTime);
-	var tRemainder = diffTime % frequency;
-	console.log(tRemainder);	
-	var tMinutesTillTrain = frequency - tRemainder;
-	console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
-	var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-	console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-	nextTrain = (moment(nextTrain).format("hh:mm a"));
+      var nextArrival = moment().add(minTillNext, 'minutes').format("HH:mm");
+      // var nextArrival = currentTime;
+      console.log("testing time " + nextArrival);
+      console.log(nextArrival);
+      // console.log(nextArrival);
+      // moment().add(Duration);
+
 
 
 	
@@ -102,9 +108,9 @@ firebase.database().ref().on("child_added", function(snapshot){
 	$("#displayContainer").append('<tr>');
 	$("#displayContainer").append(('<td>' + snapshot.val().train + "</td>"));
 	$("#displayContainer").append(('<td>' + snapshot.val().destination + "</td>"));
-	$("#displayContainer").append(('<td>' + nextTrain + "</td>"));
+	$("#displayContainer").append(('<td>' + nextArrival + "</td>"));
 	$("#displayContainer").append(('<td>' + snapshot.val().frequency + "</td>"));
-	$("#displayContainer").append(('<td>' + tMinutesTillTrain + "</td>"));
+	$("#displayContainer").append(('<td>' + minTillNext + "</td>"));
 	// $("#displayContainer").append('<td>' + '<button type="button">' + "Remove" + '</button>' + "</td>");
 
 	$("#displayContainer").append("</tr");
